@@ -1,0 +1,12 @@
+id: netboot-xyz
+name: netboot-xyz
+aliases: []
+owner: sonny
+description: "netboot.xyz PXE server on blackknight for bare-metal network installs on the OPNsense LAN"
+type: project
+status: draft
+deployed: no
+repo: null
+depends_on: []
+provides: ["PXE boot (TFTP 10.10.10.98:69)", "netboot.xyz asset mirror"]
+consumes: ["OPNsense DHCP (next-server, boot filename)", "ghcr.io/netbootxyz/netbootxyz"]

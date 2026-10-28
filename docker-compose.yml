@@ -1,0 +1,23 @@
+# netboot.xyz: TFTP boot loaders, iPXE menus and a local asset mirror.
+# OPNsense DHCP points PXE clients here; see docs/opnsense-dhcp.md.
+services:
+  netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz:${NETBOOT_IMAGE_TAG:?set NETBOOT_IMAGE_TAG in .env}
+    container_name: netbootxyz
+    restart: unless-stopped
+    environment:
+      MENU_VERSION: ${NETBOOT_MENU_VERSION:-}
+      NGINX_PORT: "80"
+      WEB_APP_PORT: "3000"
+    volumes:
+      - ./config:/config   # menus and custom boot entries (edited via the admin UI)
+      - ./assets:/assets   # local mirror of kernels/ISOs, served over HTTP
+    ports:
+      - "${NETBOOT_LAN_IP:?set NETBOOT_LAN_IP}:${NETBOOT_TFTP_PORT:-69}:69/udp"
+      - "${NETBOOT_LAN_IP}:${NETBOOT_ASSETS_PORT:-8080}:80"
+      - "${NETBOOT_ADMIN_IP:?set NETBOOT_ADMIN_IP}:${NETBOOT_ADMIN_PORT:-3001}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
