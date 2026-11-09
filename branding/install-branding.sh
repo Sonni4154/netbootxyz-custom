@@ -39,7 +39,10 @@ mkdir -p "$ASSETS/branding"
 install -m 644 "$HERE/bg-1920x1080.png" "$HERE/bg-1024x768.png" "$ASSETS/branding/"
 for d in "${TARGETS[@]}"; do
   [[ -f "$d/branding.ipxe" ]] && cp -a "$d/branding.ipxe" "$d/branding.ipxe.bak-$TS"
-  install -m 644 "$HERE/branding.ipxe" "$d/branding.ipxe"
+  # bake ASSET_URL into the installed copy so clients fetch the pictures from it
+  sed "s#^isset \${brand_url} || set brand_url .*#isset \${brand_url} || set brand_url $ASSET_URL#" \
+    "$HERE/branding.ipxe" > "$d/branding.ipxe"
+  chmod 644 "$d/branding.ipxe"
   f="$d/local-vars.ipxe"
   if [[ -f "$f" ]]; then
     cp -a "$f" "$f.bak-$TS"
