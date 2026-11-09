@@ -7,6 +7,7 @@ updated: 2026-10-28
 # netboot-xyz: RESUME
 
 ## What changed
+- 2026-11-09: added `branding/` (graphical boot menu: background PNGs, `branding.ipxe`, installer with `--uninstall`). Installed and confirmed on VM 888.
 - 2026-10-28: created from the template (`scripts/new-package.sh`), then added `docker-compose.yml` (netbootxyz `0.7.6-nbxyz26`), `.env.example`, `scripts/verify.sh` and `docs/opnsense-dhcp.md`.
 
 ## Current state

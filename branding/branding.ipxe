@@ -1,0 +1,28 @@
+#!ipxe
+# blackknight netboot branding: switches iPXE to a graphical console with a
+# background picture, then returns to netboot.xyz's normal menu.
+# Chained from local-vars.ipxe. To disable, remove the "chain ... branding.ipxe"
+# line from local-vars.ipxe (or run uninstall). Any failure falls back to text.
+
+isset ${brand_url} || set brand_url http://10.10.10.98:8080/branding
+iseq ${brand_done} 1 && goto brand_end ||
+set brand_done 1
+
+# Try 1920x1080 first, then 1024x768. Margins keep text inside the panel
+# drawn on the picture (8x16 font: 144x48 chars at 1080p, 114x35 at 768).
+console --x 1920 --y 1080 --left 384 --right 384 --top 196 --bottom 108 --picture ${brand_url}/bg-1920x1080.png && goto brand_colours ||
+console --x 1024 --y 768 --left 56 --right 56 --top 124 --bottom 72 --picture ${brand_url}/bg-1024x768.png && goto brand_colours ||
+echo Graphical console unavailable, staying in text mode.
+goto brand_end
+
+:brand_colours
+# Palette: 4 (blue) becomes the accent, 6 (cyan) a softer cyan.
+colour --rgb 0x2f7fe0 4 ||
+colour --rgb 0x8fd3ff 6 ||
+# Background 9 = transparent, so the picture shows through the text.
+cpair --foreground 7 --background 9 0 ||
+cpair --foreground 6 --background 9 1 ||
+cpair --foreground 7 --background 4 2 ||
+cpair --foreground 7 --background 9 3 ||
+
+:brand_end
