@@ -22,7 +22,12 @@ OPNsense DHCP hands clients the TFTP server and boot file: [`docs/opnsense-dhcp.
 cp .env.example .env     # check NETBOOT_LAN_IP matches blackknight's LAN address
 docker compose up -d
 scripts/verify.sh        # TFTP, asset mirror and admin UI checks
+sudo bash branding/install-branding.sh   # optional graphical boot menu
 ```
+
+## Boot menu theme
+The graphical boot menu (background picture, 1920x1080) lives in [`branding/`](branding/README.md).
+Install it with `sudo bash branding/install-branding.sh` after the container is up.
 
 ## How to deploy
 Runs on blackknight only, from this folder. Not in Ansible yet. The OPNsense DHCP change is a manual
