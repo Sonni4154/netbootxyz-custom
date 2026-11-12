@@ -45,7 +45,7 @@ confirm against the UI before applying.
 
 - PXE clients on LAN reach blackknight on the same subnet, so no OPNsense rule is needed for TFTP.
   Clients on another VLAN need a pass rule to `10.10.10.98` UDP 69 and TCP 8080, and the boot files
-  must be served via a DHCP scope on that VLAN.
+  must be served via a DHCP scope on that VLAN. Step-by-step for every VLAN: [pxe-all-vlans.md](pxe-all-vlans.md).
 - After the boot loader starts, menus and most images come from `boot.netboot.xyz` and distro mirrors
   over HTTPS, so the client VLAN needs internet egress (not via the ProtonVPN VLAN unless that is intended).
 - Disable Secure Boot on the client; the netboot.xyz EFI loader is not signed.

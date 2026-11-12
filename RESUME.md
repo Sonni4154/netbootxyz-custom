@@ -9,6 +9,8 @@ updated: 2026-10-28
 ## What changed
 - 2026-10-28: created from the template (`scripts/new-package.sh`), then added `docker-compose.yml` (netbootxyz `0.7.6-nbxyz26`), `.env.example`, `scripts/verify.sh` and `docs/opnsense-dhcp.md`.
 
+- 2026-11-12: added `docs/pxe-all-vlans.md` (one OPNsense interface-group rule plus per-VLAN DHCP network boot, so every VLAN can PXE boot).
+
 ## Current state
 Files written and `docker compose config` validates. Container not started. OPNsense DHCP not changed.
 
@@ -16,7 +18,8 @@ Files written and `docker compose config` validates. Container not started. OPNs
 1. `cp .env.example .env && docker compose up -d && scripts/verify.sh` on blackknight.
 2. Owner applies the DHCP settings in `docs/opnsense-dhcp.md` (find which DHCP backend the gateway runs first).
 3. PXE-boot a test VM on LAN and confirm the menu loads.
-Revisit by: 2026-11-11
+4. Owner applies `docs/pxe-all-vlans.md` on OPNsense, then tests VLAN 99 first with VM 888.
+Revisit by: 2026-11-19
 
 ## Blockers / open questions
 - Worklog schema `netboot_xyz` does not exist in the master worklog DB; entries go to the failover file until it is added (worklog project).
