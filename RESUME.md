@@ -9,6 +9,8 @@ updated: 2026-10-28
 ## What changed
 - 2026-10-28: created from the template (`scripts/new-package.sh`), then added `docker-compose.yml` (netbootxyz `0.7.6-nbxyz26`), `.env.example`, `scripts/verify.sh` and `docs/opnsense-dhcp.md`.
 
+- 2026-11-12: admin UI moved to `127.0.0.1:3001` (was the LAN IP on the live host since 2026-11-09, and the Tailscale IP before that). Tailnet access via `tailscale serve`; `verify.sh` now fails on a non-loopback admin bind.
+
 ## Current state
 Files written and `docker compose config` validates. Container not started. OPNsense DHCP not changed.
 
@@ -24,4 +26,4 @@ Revisit by: 2026-11-11
 - No git remote; `repo:` in project.yaml stays null until one exists.
 
 ## Entities touched
-blackknight (10.10.10.98, 100.115.61.40), opnsense_gw (DHCP, manual), container `netbootxyz`.
+blackknight (10.10.10.98; admin UI on 127.0.0.1, tailnet via `tailscale serve`), opnsense_gw (DHCP, manual), container `netbootxyz`.

@@ -13,7 +13,7 @@ Owner: sonny. One container (`ghcr.io/netbootxyz/netbootxyz`, pinned tag) serves
 |---|---|---|
 | TFTP boot loaders (`netboot.xyz.kpxe`, `netboot.xyz.efi`) | `10.10.10.98:69/udp` | PXE clients on LAN |
 | Local asset mirror (nginx) | `10.10.10.98:8080` | PXE clients on LAN |
-| Admin web UI (menu editing, asset downloads) | `100.115.61.40:3001` | Tailscale only; no login |
+| Admin web UI (menu editing, asset downloads) | `127.0.0.1:3001` | blackknight only; tailnet via `tailscale serve`; no login |
 
 OPNsense DHCP hands clients the TFTP server and boot file: [`docs/opnsense-dhcp.md`](docs/opnsense-dhcp.md).
 
@@ -24,13 +24,21 @@ docker compose up -d
 scripts/verify.sh        # TFTP, asset mirror and admin UI checks
 ```
 
+### Reaching the admin UI
+It listens on `127.0.0.1:3001` only. Pick one:
+- Tailnet (persistent): `sudo tailscale serve --bg --http 3001 http://127.0.0.1:3001`, then open
+  `http://blackknight:3001` from any tailnet device. Undo with `sudo tailscale serve --http 3001 off`.
+- SSH tunnel (ad hoc): `ssh -L 3001:127.0.0.1:3001 blackknight`, then open `http://localhost:3001`.
+
 ## How to deploy
 Runs on blackknight only, from this folder. Not in Ansible yet. The OPNsense DHCP change is a manual
 owner step (the gateway is protected).
 
 ## Future-proofing checks (root CLAUDE.md, section 4)
 1. Security: TFTP and the asset mirror are anonymous read-only and bound to the LAN IP only. The admin UI
-   has no authentication, so it binds to the Tailscale IP only; tailnet ACLs are the check. Putting it
+   has no authentication, so it binds to 127.0.0.1 only and is exposed to the tailnet with `tailscale serve`;
+   tailnet ACLs are the check. It does not bind the Tailscale IP directly, because a Tailscale outage at boot
+   would then stop the container and take TFTP down with it. `scripts/verify.sh` fails if the bind is not loopback. Putting it
    behind Authentik (`@sonni4154/marin-auth` / forward auth) is the next step if more people get tailnet access.
    Anyone on LAN can PXE-boot an installer; that is the point, and it only works with physical/console access to the client.
 2. Multi-tenancy: no business data and no tenant-owned rows. Not applicable.
